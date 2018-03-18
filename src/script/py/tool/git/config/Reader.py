@@ -1,3 +1,6 @@
+# RepositoryUri.py を参照するため
+import sys, pathlib
+sys.path.append(str(pathlib.Path(pathlib.Path(__file__).parent.parent, 'uri')))
 import configparser
 from RepositoryUri import RepositoryUri
 class Reader:

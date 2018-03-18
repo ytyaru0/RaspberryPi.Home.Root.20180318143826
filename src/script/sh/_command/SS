@@ -1,0 +1,36 @@
+#!/bin/bash
+function SS ()  {
+    . ~/root/script/sh/_lib/path.sh
+    . ~/root/script/sh/_userlib/path.sh
+    . ~/root/script/sh/_lib/file.sh
+    . ~/root/script/sh/color/color.sh
+    #. /tmp/work/Shell.Rapbian.20180309090000/src/color/color.sh
+    local timestamp=`date '+%Y%m%d%H%M%S'`
+    local ext=".png"
+    local filepath=`Join ${Path[SS]} "$timestamp$ext"`
+    mkdir -p "${Path[SS]}"
+
+    scrot -u -b -c -d 5 "$filepath"
+    local size_source=`GetSize $filepath`
+    local size_source_unit=`python3 ~/root/script/py/os/file/Size.py $size_source`
+    echo "${Path[SS]}"
+    echo -e `Color 'Y'`"$timestamp$ext" `Color 'BG'`"    "$size_source_unit
+    #for q in 0 1 5 10 20 100; do
+    for q in 100; do
+        local qual3=`printf "%03d" $q`
+        local filename=$timestamp"_"$qual3$ext
+        local o_file=`Join ${Path[SS]} "$filename"`
+        local i_file=`Join ${Path[SS]} "$timestamp$ext"`
+        pngquant --strip --output "$o_file" --quality $q "$i_file"
+
+        local size=`GetSize $o_file`
+        local rate=`python3 ~/root/script/py/os/file/Rate.py  $size_source $size`
+        local size_unit=`python3 /tmp/work/_command/Size.py $size`
+        echo -e -n `Color 'Y'`$timestamp"_"`Color 'BY'`$qual3`Color 'Y'`$ext" "
+        echo -e -n `Color 'BG'`$size_unit`Color`" "
+        echo -e `Color 'BR'`$rate`Color`'%'
+    done
+
+    rm $filepath
+}
+SS

@@ -1,0 +1,14 @@
+# http://hendigi.karaage.xyz/2016/11/auto-boot/
+[Unit]
+Description=startup, settime, ntpdate
+After=syslog.target
+
+[Service]
+Type=simple
+#WorkingDirectory=/tmp/
+ExecStart=/bin/bash /home/pi/root/script/sh/settime.sh
+#TimeoutStopSec=5
+StandardOutput=null
+
+[Install]
+WantedBy = multi-user.target

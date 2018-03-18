@@ -1,4 +1,17 @@
 #!/bin/bash
+IsSameConfig () {
+    if [ -f "${repo_path}/.git/config" ]; then
+        #local gitconfig_reponame=$(python3 "$HOME/root/script/py/tool/git/config/GetRepoName.py" "${repo_path}")
+        #local gitconfig_userrepo=($(python3 "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/py/tool/git/config/Reader.py" "${repo_path}"))
+        local gitconfig_userrepo=($(python3 "$HOME/root/script/py/tool/git/config/Reader.py" "${repo_path}"))
+        local gitconfig_user=${gitconfig_userrepo[0]}
+        local gitconfig_repo=${gitconfig_userrepo[1]}
+        local cd_name=$(basename "${repo_path}")
+        [ 0 -lt $# ] && [ "$1" != "$gitconfig_user" ] && { echo -e ".git/configのユーザ名と起動引数のユーザ名が一致しません。\n  .git/configのユーザ名: ${gitconfig_user}\n  起動引数のユーザ名: ${1}"; exit 1; }
+        [ "${cd_name}" != "${gitconfig_repo}" ] && { echo -e ".git/configのリポジトリ名とカレントディレクトリ名が一致しません。他所からコピペした.gitを間違って使い回していませんか？\n  .git/configリポジトリ名: ${gitconfig_repo}\n  カレントディレクトリ名 : ${cd_name}"; exit 1; }
+    fi
+}
+
 ExistReadMe () {
     for name in README ReadMe readme Readme; do
         for ext in "" .md .txt; do
@@ -80,6 +93,7 @@ AddCommitPush () {
 
 # $1 Githubユーザ名
 repo_path=`pwd`
+IsSameConfig "$@"
 ExistReadMe
 [ 0 -eq $# ] && SelectUser
 [ 0 -lt $# ] && IsRegistedUser $1

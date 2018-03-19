@@ -1,9 +1,9 @@
 # アウトプット系コマンド
 
-## y
+## do
 
 ```sh
-$ y {lang} {context}
+$ do {lang} {context}
 ```
 
 * `0.py`など単一ファイル作成
@@ -13,10 +13,10 @@ $ y {lang} {context}
 さらに以下のことができると便利。
 
 * 最新は一つ前のコピーファイルとする
-* `/tmp/work/y/`配下に必ず配置する
-* `$ cd /tmp/work/y/`
+* `/tmp/work/do/`配下に必ず配置する
+* `$ cd /tmp/work/do/`
 * ターミナルのタブ生成
-    * エディタ起動: `$ vim /tmp/work/y/{作成ファイル名}`
+    * エディタ起動: `$ vim /tmp/work/do/{作成ファイル名}`
     * 初回実行: `$ python {作成ファイルパス}`
 
 ## pj
@@ -31,12 +31,12 @@ $ pj {lang} {context}
 
 `y`コマンドの複雑な構成版。
 
-なお、`/tmp/work/y/`配下で`$ pj`とするとプロジェクト化する。
+なお、`/tmp/work/do/`配下で`$ pj`とするとプロジェクト化する。
 
 1. `/tmp/work/pj/{lang}.{datetime}/`ディレクトリ生成
 1. `./src/`生成する
-1. 2に`/tmp/work/y/`配下コードをコピーする
-1. `/tmp/work/y/`配下コードを削除する
+1. 2に`/tmp/work/do/`配下コードをコピーする
+1. `/tmp/work/do/`配下コードを削除する
 
 ## repo
 

@@ -19,7 +19,7 @@ class Https(Protocol):
     def __init__(self):
         super().__init__()
         self.__password = None
-    def IsProtocol(self, url): return url.endswith('.git') and url.startswith('https://')
+    def IsProtocol(self, url): return url.startswith('https://')
     def To(self, user, repo, password=None):
         scheme = 'https://'
         if password is None: domain = 'github.com'

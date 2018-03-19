@@ -30,21 +30,30 @@ class RepositoryUriTest(unittest.TestCase):
     def test_from_https_A(self):
         user = 'ytyaru0'
         repo = 'MyRepoName'
-        url = "https://github.com/{}/{}.git".format(user, repo)
+        url = "https://github.com/{}/{}".format(user, repo)
         res = RepositoryUri().From(url)
         self.assertTrue('user' in res.keys())
         self.assertTrue('repo' in res.keys())
+        self.assertEqual(user, res['user'])
+        self.assertEqual(repo, res['repo'])
+        url += ".git"
+        res = RepositoryUri().From(url)
         self.assertEqual(user, res['user'])
         self.assertEqual(repo, res['repo'])
     def test_from_https_B(self):
         user = 'ytyaru0'
         repo = 'MyRepoName'
         pw = 'PASS_WORD'
-        url = "https://{0}:{2}@github.com/{0}/{1}.git".format(user, repo, pw)
+        url = "https://{0}:{2}@github.com/{0}/{1}".format(user, repo, pw)
         res = RepositoryUri().From(url)
         self.assertTrue('user' in res.keys())
         self.assertTrue('repo' in res.keys())
         self.assertTrue('pass' in res.keys())
+        self.assertEqual(user, res['user'])
+        self.assertEqual(repo, res['repo'])
+        self.assertEqual(pw, res['pass'])
+        url += ".git"
+        res = RepositoryUri().From(url)
         self.assertEqual(user, res['user'])
         self.assertEqual(repo, res['repo'])
         self.assertEqual(pw, res['pass'])

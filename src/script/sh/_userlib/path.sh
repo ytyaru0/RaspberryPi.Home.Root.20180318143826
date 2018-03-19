@@ -3,6 +3,9 @@ declare -A Path;
 Path=(
     ["Work"]="/tmp/work/"
     ["WorkMeta"]="/tmp/work/.meta/"
+    ["WorkFlowDo"]="/tmp/work/flow/do/"
+    ["WorkFlowPj"]="/tmp/work/flow/pj/"
+    ["WorkFlowRepo"]="/tmp/work/flow/repo/"
     ["SS"]="/tmp/work/SS/"
     ["Root"]="$HOME/root/"
     ["ShellScript"]="$HOME/root/script/sh/"
@@ -14,11 +17,11 @@ GetWorkDir () { echo "/tmp/work/"; }
 # 用途: settime.sh用一時ファイル配置など。
 GetWorkMetaDir () { echo `GetWorkDir`".meta/"; }
 # 用途: doコマンド用ディレクトリ。
-GetWorkDoDir () { echo `GetWorkDir`"flow/do/"; }
+GetWorkFlowDoDir () { echo `GetWorkDir`"flow/do/"; }
 # 用途: pjコマンド用ディレクトリ。
-GetWorkPjDir () { echo `GetWorkDir`"flow/pj/"; }
+GetWorkFlowPjDir () { echo `GetWorkDir`"flow/pj/"; }
 # 用途: repoコマンド用ディレクトリ。
-GetWorkRepoDir () { echo `GetWorkDir`"flow/repo/"; }
+GetWorkFlowRepoDir () { echo `GetWorkDir`"flow/repo/"; }
 # 用途: スクリーンショット画像を配置する
 GetScreenShotDir () { echo `GetWorkDir`"SS/"; }
 # 用途: ユーザが管理するディレクトリのルート

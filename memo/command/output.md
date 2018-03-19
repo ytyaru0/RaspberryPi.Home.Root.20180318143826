@@ -13,10 +13,10 @@ $ do {lang} {context}
 さらに以下のことができると便利。
 
 * 最新は一つ前のコピーファイルとする
-* `/tmp/work/do/`配下に必ず配置する
-* `$ cd /tmp/work/do/`
+* `/tmp/work/flow/do/`配下に必ず配置する
+* `$ cd /tmp/work/flow/do/`
 * ターミナルのタブ生成
-    * エディタ起動: `$ vim /tmp/work/do/{作成ファイル名}`
+    * エディタ起動: `$ vim /tmp/work/flow/do/{作成ファイル名}`
     * 初回実行: `$ python {作成ファイルパス}`
 
 ## pj
@@ -27,16 +27,16 @@ $ pj {lang} {context}
 
 * 複数ファイル作成
 * `src/`, `test/`などディレクトリ構造があり相対パス関係にあるコード
-* `/tmp/work/pj/`配下に作る
+* `/tmp/work/flow/pj/`配下に作る
 
-`y`コマンドの複雑な構成版。
+`do`コマンドの複雑な構成版。
 
-なお、`/tmp/work/do/`配下で`$ pj`とするとプロジェクト化する。
+なお、`/tmp/work/flow/do/`配下で`$ pj`とするとプロジェクト化する。
 
-1. `/tmp/work/pj/{lang}.{datetime}/`ディレクトリ生成
+1. `/tmp/work/flow/pj/{lang}.{datetime}/`ディレクトリ生成
 1. `./src/`生成する
-1. 2に`/tmp/work/do/`配下コードをコピーする
-1. `/tmp/work/do/`配下コードを削除する
+1. 2に`/tmp/work/flow/do/`配下コードをコピーする
+1. `/tmp/work/flow/do/`配下コードを削除する
 
 ## repo
 
@@ -44,6 +44,7 @@ $ pj {lang} {context}
 $ repo -l {license} {lang} {context}
 ```
 
+* `/tmp/work/flow/repo/`配下に配置する
 * README, LICENSE, .gitignore 作成
 * テンプレ
     * {lang}, {context} を引数にして
@@ -53,5 +54,8 @@ $ repo -l {license} {lang} {context}
     * {lang}, {context} を引数にして
         * .gitignore
 
-なお、`/tmp/work/pj/*/`ディレクトリ配下で実行すると、READMEなどを作成する。既存なら無視。
+なお、`/tmp/work/flow/pj/*/`ディレクトリ配下で実行すると、リポジトリ化する。
+
+1. READMEなどを作成する。(既存なら無視)
+1. `./pj/`配下から削除し、`./repo/`配下に配置する
 

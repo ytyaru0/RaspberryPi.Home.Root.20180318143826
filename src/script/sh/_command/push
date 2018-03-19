@@ -9,6 +9,7 @@ IsSameConfig () {
         local cd_name=$(basename "${repo_path}")
         [ 0 -lt $# ] && [ "$1" != "$gitconfig_user" ] && { echo -e ".git/configのユーザ名と起動引数のユーザ名が一致しません。\n  .git/configのユーザ名: ${gitconfig_user}\n  起動引数のユーザ名: ${1}"; exit 1; }
         [ "${cd_name}" != "${gitconfig_repo}" ] && { echo -e ".git/configのリポジトリ名とカレントディレクトリ名が一致しません。他所からコピペした.gitを間違って使い回していませんか？\n  .git/configリポジトリ名: ${gitconfig_repo}\n  カレントディレクトリ名 : ${cd_name}"; exit 1; }
+        username=$gitconfig_user
     fi
 }
 
@@ -33,6 +34,8 @@ QuerySqlite () {
     echo $select
 }
 SelectUser () {
+    # IsSameConfig で .git/config が存在していればその値を使う
+    [ -n $username ] && return
     local sql="select Username from Accounts order by Username asc;"
     local select=`QuerySqlite "$sql"`
     echo "ユーザを選択してください。"

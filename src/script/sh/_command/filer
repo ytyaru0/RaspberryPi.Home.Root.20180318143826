@@ -1,0 +1,2 @@
+bash --rcfile ~/root/script/sh/_userlib/py_env/called_ranger.sh
+#bash --rcfile /tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/sh/_userlib/py_env/called_ranger.sh

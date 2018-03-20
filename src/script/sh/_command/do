@@ -1,0 +1,19 @@
+#!/bin/bash
+# やってみるコマンド。単一ファイルを/tmp/work/y/に配置する
+# $1: ext (.py, .sh, .md, .html, .js, .cs, ...)
+# $2..: context (cui, gui, http, server)
+
+[ $# -lt 1 ] && { echo "引数不足です。ファイル拡張子をください。"; exit 1; }
+
+. $HOME/root/script/sh/_lib/path.sh
+#. $HOME/root/script/sh/_userlib/path.sh
+. /tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/sh/_userlib/path.sh
+dir=`GetWorkFlowDoDir`
+#name=`python3 /home/pi/root/script/py/os/file/NameGenerator.py -a -r 36 -e $1 "${dir}"`
+name=`python3 /tmp/work/Python.NameGenerator.20180313180534/src/NameGenerator.py -a -r 36 -e $1 "${dir}"`
+echo $name
+filepath=$(Join "${dir}" "${name}")
+mkdir -p "$dir"
+touch "${filepath}.${1}"
+editor='vim'
+"$editor" "$filepath"

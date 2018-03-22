@@ -8,7 +8,6 @@
 # 引数からテンプレファイルパスを取得する
 pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/GetTemplateFilePath.py"
 template=$(python3 ${pyscript} "$@")
-
 . $HOME/root/script/sh/_lib/path.sh
 #. $HOME/root/script/sh/_userlib/path.sh
 . /tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/sh/_userlib/path.sh

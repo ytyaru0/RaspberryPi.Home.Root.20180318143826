@@ -12,11 +12,11 @@ template=$(python3 ${pyscript} "$@")
 #. $HOME/root/script/sh/_userlib/path.sh
 . /tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/sh/_userlib/path.sh
 dir=`GetWorkFlowDoDir`
+mkdir -p "$dir"
 #name=`python3 /home/pi/root/script/py/os/file/NameGenerator.py -a -r 36 -e $1 "${dir}"`
 name=`python3 /tmp/work/Python.NameGenerator.20180313180534/src/NameGenerator.py -a -r 36 -e $1 "${dir}"`
 echo $name
 filepath=$(Join "${dir}" "${name}.${1}")
-mkdir -p "$dir"
 touch "${filepath}"
 cat ${template} > ${filepath}
 editor='vim'

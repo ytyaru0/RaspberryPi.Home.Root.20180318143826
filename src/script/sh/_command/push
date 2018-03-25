@@ -35,7 +35,8 @@ QuerySqlite () {
 }
 SelectUser () {
     # IsSameConfig で .git/config が存在していればその値を使う
-    [ -n $username ] && return
+    #[ -n $username ] && return
+    [ ! -z "$username" ] || [ ! "${username:-A}" = "${username-A}" ] && return
     local sql="select Username from Accounts order by Username asc;"
     local select=`QuerySqlite "$sql"`
     echo "ユーザを選択してください。"

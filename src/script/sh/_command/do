@@ -5,29 +5,9 @@
 
 [ $# -lt 1 ] && { echo "引数不足です。ファイル拡張子をください。"; exit 1; }
 
-
-# 引数からテンプレファイルパスを取得する
-#pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/GetTemplateFilePath.py"
-#template=$(python3 ${pyscript} "$@")
-
-# 出力先ファイルパス作成
-. $HOME/root/script/sh/_lib/path.sh
-#. $HOME/root/script/sh/_userlib/path.sh
-. /tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/sh/_userlib/path.sh
-dir=`GetWorkFlowDoDir`
-mkdir -p "$dir"
-#name=`python3 /home/pi/root/script/py/os/file/NameGenerator.py -a -r 36 -e $1 "${dir}"`
-name=`python3 /tmp/work/Python.NameGenerator.20180313180534/src/NameGenerator.py -a -r 36 -e $1 "${dir}"`
-#echo $name
-filepath=$(Join "${dir}" "${name}.${1}")
-touch "${filepath}"
-
-# テンプレファイルに引数を渡して展開する
-#cat ${template} > ${filepath}
-pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/CopyTemplate.py"
-python3 "${pyscript}" "$@" "${filepath}"
-echo "$@"
-
-editor='vim'
-"$editor" "$filepath"
-
+pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/do.py"
+filepath=`python3 "${pyscript}" "$@"`
+if [ -f "$filepath" ]; then
+    [ -z "$editor" ] && [ "${editor:-A}" = "${editor-A}" ] && editor='vim'
+    "$editor" "$filepath"
+fi

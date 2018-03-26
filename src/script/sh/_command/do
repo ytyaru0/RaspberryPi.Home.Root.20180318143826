@@ -1,13 +1,24 @@
 #!/bin/bash
-# やってみるコマンド。単一ファイルを/tmp/work/y/に配置する
+# やってみるコマンド。単一ファイルを/tmp/work/flow/do/に配置する
 # $1: ext (.py, .sh, .md, .html, .js, .cs, ...)
 # $2..: context (cui, gui, http, server)
+#       template-vars (テンプレ変数)
 
 [ $# -lt 1 ] && { echo "引数不足です。ファイル拡張子をください。"; exit 1; }
 
+# jinja2がある仮想環境を有効化
+. ~/root/script/sh/pyenv.sh
+. ~/root/env/py/template/bin/activate
+
+# テンプレファイルを作成する
 pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/do.py"
 filepath=`python3 "${pyscript}" "$@"`
+
+# 成功すればエディタで開く
 if [ -f "$filepath" ]; then
     [ -z "$editor" ] && [ "${editor:-A}" = "${editor-A}" ] && editor='vim'
     "$editor" "$filepath"
+else
+    # 失敗ならエラーを表示する（テンプレ変数の説明等）
+    echo "$filepath"
 fi

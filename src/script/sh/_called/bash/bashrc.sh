@@ -13,6 +13,7 @@ python3 /tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/IniToSh.py
 #. ~/root/_meta/path/sh/paths.sh
 
 # コマンドの引数補完セット
-. /tmp/work/Python.TemplateFileMaker.20180314204216/src/setup_complete_candidate_do.sh
+. /tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/do/setup_complete_candidate_do.sh
+#. /tmp/work/Python.TemplateFileMaker.20180314204216/src/setup_complete_candidate_do.sh
 #. ~/root/_meta/command/setup_complete_candidate_do.sh
 

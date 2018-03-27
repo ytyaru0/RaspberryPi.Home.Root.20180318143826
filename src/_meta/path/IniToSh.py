@@ -29,6 +29,7 @@ class IniToSh:
         for path_ini in paths_ini:
             parser = configparser.ConfigParser()
             parser.read(path_ini)
+            #for key in sorted(parser[section]):
             for key in parser[section]:
                 value = self.__ReplaceVarToArray(section, parser[section][key])
                 data += "{}[\"{}\"]=\"{}\"".format(section, key, value) + '\n'

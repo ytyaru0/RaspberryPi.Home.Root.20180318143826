@@ -6,14 +6,14 @@ ExportPath "$HOME/root/tool" "$HOME/root/script/sh/_command"
 . ~/root/script/sh/pyenv.sh
 . ~/root/script/sh/py_venv.sh
 
+# 渡されたパスのうち最初に存在したファイルをsourceコマンドで実行する
+any_source () { for s in "$@"; do [ -f "$s" ] && { . "$s"; return; }; done }
+
 # ユーザパス設定読込
-python3 /tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/IniToSh.py
-. /tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/sh/paths.sh
+any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/sh/paths.sh" "~/root/_meta/path/sh/paths.sh"
+# iniファイルからshを作成するには以下コマンド実行。
 #python3 ~/root/_meta/path/IniToSh.py
-#. ~/root/_meta/path/sh/paths.sh
 
 # コマンドの引数補完セット
-. /tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/do/setup_complete_candidate_do.sh
-#. /tmp/work/Python.TemplateFileMaker.20180314204216/src/setup_complete_candidate_do.sh
-#. ~/root/_meta/command/setup_complete_candidate_do.sh
+any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/do/setup_complete_candidate_do.sh" "~/root/_meta/command/setup_complete_candidate_do.sh"
 

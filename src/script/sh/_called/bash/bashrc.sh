@@ -10,10 +10,10 @@ ExportPath "$HOME/root/tool" "$HOME/root/script/sh/_command"
 any_source () { for s in "$@"; do [ -f "$s" ] && { . "$s"; return; }; done }
 
 # ユーザパス設定読込
-any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/sh/paths.sh" "~/root/_meta/path/sh/paths.sh"
+any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/sh/paths.sh" "${HOME}/root/_meta/path/sh/paths.sh"
 # iniファイルからshを作成するには以下コマンド実行。
-#python3 ~/root/_meta/path/IniToSh.py
+#python3 ${HOME}/root/_meta/path/IniToSh.py
 
 # コマンドの引数補完セット
-any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/do/setup_complete_candidate_do.sh" "~/root/_meta/command/setup_complete_candidate_do.sh"
+any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/do/setup_complete_candidate_do.sh" "${HOME}/root/_meta/command/do/setup_complete_candidate_do.sh"
 

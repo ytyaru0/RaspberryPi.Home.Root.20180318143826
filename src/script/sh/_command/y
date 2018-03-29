@@ -12,7 +12,7 @@
 
 # テンプレファイルを作成する
 pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/do.py"
-#pyscript="~/root/script/py/_command/do/do.py"
+#pyscript="${HOME}/root/script/py/_command/do/do.py"
 filepath=`python3 "${pyscript}" "$@"`
 
 # 成功すればエディタで開く

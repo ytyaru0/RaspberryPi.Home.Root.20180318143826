@@ -1,7 +1,7 @@
-import sys, pathlib
-sys.path.append('~/root/_meta/path/')
+import sys, os.path, pathlib
+sys.path.append(os.path.expanduser('~/root/_meta/path/'))
 from PathIni import PathIni
-sys.path.append(PathIni()['root_script_py']  / 'os/file/'target)
+sys.path.append(str(PathIni()['root_script_py']  / 'os/file/'))
 from SequenceName import SequenceName
 import collections
 from CommandToTemplate import CommandToTemplate

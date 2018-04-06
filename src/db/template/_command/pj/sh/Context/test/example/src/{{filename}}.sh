@@ -1,0 +1,3 @@
+{{funcname}} () {
+    echo 'Hello'
+}

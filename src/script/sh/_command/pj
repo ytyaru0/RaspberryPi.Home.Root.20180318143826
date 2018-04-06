@@ -1,0 +1,28 @@
+#!/bin/bash
+# プロジェクト作成コマンド。/tmp/work/flow/pj/に配置する
+# $1: ext (.py, .sh, .md, .html, .js, .cs, ...)
+# $2..: context (cui, gui, http, server)
+#       template-vars (テンプレ変数)
+
+[ $# -lt 1 ] && { echo "引数不足です。ファイル拡張子をください。"; exit 1; }
+
+# jinja2がある仮想環境を有効化
+. ~/root/script/sh/pyenv.sh
+#. ~/root/env/py/template/bin/activate
+
+# テンプレファイルを作成する
+#pyscript="/tmp/work/Python.TemplateFileMaker.20180314204216/src/do.py"
+pyscript="/tmp/work/Python.ProjectMaker.20180402173000/src/pj.py"
+
+#pyscript="${HOME}/root/script/py/_command/do/do.py"
+dirpath=`python3 "${pyscript}" "$@"`
+cd "${dirpath}"
+
+# 成功すればエディタで開く
+#if [ -f "$dirpath" ]; then
+#    [ -z "$editor" ] && [ "${editor:-A}" = "${editor-A}" ] && editor='vim'
+#    "$editor" "$dirpath"
+#else
+#    # 失敗ならエラーを表示する（テンプレ変数の説明等）
+#    echo "$dirpath"
+#fi

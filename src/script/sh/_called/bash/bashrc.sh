@@ -17,3 +17,4 @@ any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/path/sh/pat
 # コマンドの引数補完セット
 any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/do/setup_complete_candidate_do.sh" "${HOME}/root/_meta/command/do/setup_complete_candidate_do.sh"
 
+any_source "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/_meta/command/pj/setup_complete_candidate_pj.sh" "${HOME}/root/_meta/command/do/setup_complete_candidate_pj.sh"

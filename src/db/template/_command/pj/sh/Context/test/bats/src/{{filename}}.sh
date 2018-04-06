@@ -1,0 +1,1 @@
+EchoHello () { echo 'Hello'; }

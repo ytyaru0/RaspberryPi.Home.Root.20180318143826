@@ -26,3 +26,12 @@ function GetHiddenFilename() {
 }
 # sed: https://bi.biopapyrus.jp/os/linux/sed.html
 # 文字列操作: https://qiita.com/sotarok/items/9f2ccffc23bd36534e2e
+GetChildrenDirnames() {
+    local target=$1
+    [ ! -d "$target" ] && { echo "存在するディレクトリを指定してくしてください。: ${target}"; return; }
+    for dir in `\find "${target}" -maxdepth 1 -type d | sort`; do
+        local dname=`basename $dir`
+        [ "$dname" == `basename $target` ] && continue
+        echo $dname
+    done
+}

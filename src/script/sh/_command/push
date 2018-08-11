@@ -3,9 +3,13 @@ IsSameConfig () {
     if [ -f "${repo_path}/.git/config" ]; then
         #local gitconfig_reponame=$(python3 "$HOME/root/script/py/tool/git/config/GetRepoName.py" "${repo_path}")
         #local gitconfig_userrepo=($(python3 "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/py/tool/git/config/Reader.py" "${repo_path}"))
+        # 2018/08/11 複数アカウント使っていると違うアカウントでcommitされることがあった。~/.gitconfigの値が使われていた。どうすればいいか不明。とりあえず初回時にコミットせず一旦終了し、再度実行してコミットすると正しいアカウントでコミットできる。
         local gitconfig_userrepo=($(python3 "$HOME/root/script/py/tool/git/config/Reader.py" "${repo_path}"))
         local gitconfig_user=${gitconfig_userrepo[0]}
         local gitconfig_repo=${gitconfig_userrepo[1]}
+        echo ".git/config filepath: ${repo_path}/.git/config"
+        echo ".git/config:[remote "origin"]Url user: ${gitconfig_user}"
+        echo ".git/config:[remote "origin"]Url repo: ${gitconfig_repo}"
         local cd_name=$(basename "${repo_path}")
         [ 0 -lt $# ] && [ "$1" != "$gitconfig_user" ] && { echo -e ".git/configのユーザ名と起動引数のユーザ名が一致しません。\n  .git/configのユーザ名: ${gitconfig_user}\n  起動引数のユーザ名: ${1}"; exit 1; }
         [ "${cd_name}" != "${gitconfig_repo}" ] && { echo -e ".git/configのリポジトリ名とカレントディレクトリ名が一致しません。他所からコピペした.gitを間違って使い回していませんか？\n  .git/configリポジトリ名: ${gitconfig_repo}\n  カレントディレクトリ名 : ${cd_name}"; exit 1; }
@@ -106,6 +110,9 @@ ExistReadMe
 GetPassMail
 git config --local user.name $username
 git config --local user.email "$mailaddr"
+# 2018/08/11 複数アカウント使っていると違うアカウントでcommitされることがあった。~/.gitconfigの値が使われていた。どうすればいいか不明。とりあえず初回時にコミットせず一旦終了し、再度実行してコミットすると正しいアカウントでコミットできる。
+echo "username:${username}"
+echo "email:${mailaddr}"
 
 # Create, Add, Commit, Push
 repo_name=$(basename $repo_path)

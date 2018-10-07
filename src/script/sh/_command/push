@@ -1,22 +1,33 @@
 #!/bin/bash
+# GitHub リポジトリ作成
+#   $1 Githubユーザ名
+#   $2 アカウントDBパス
+
 IsSameConfig () {
+     # ローカル・リポジトリ名を取得する
+    reponame=$(basename "${repo_path}")
     if [ -f "${repo_path}/.git/config" ]; then
-        #local gitconfig_reponame=$(python3 "$HOME/root/script/py/tool/git/config/GetRepoName.py" "${repo_path}")
-        #local gitconfig_userrepo=($(python3 "/tmp/work/RaspberryPi.Home.Root.20180318143826/src/script/py/tool/git/config/Reader.py" "${repo_path}"))
-        # 2018/08/11 複数アカウント使っていると違うアカウントでcommitされることがあった。~/.gitconfigの値が使われていた。どうすればいいか不明。とりあえず初回時にコミットせず一旦終了し、再度実行してコミットすると正しいアカウントでコミットできる。
-        local gitconfig_userrepo=($(python3 "$HOME/root/script/py/tool/git/config/Reader.py" "${repo_path}"))
-        local gitconfig_user=${gitconfig_userrepo[0]}
-        local gitconfig_repo=${gitconfig_userrepo[1]}
-        echo ".git/config filepath: ${repo_path}/.git/config"
-        echo ".git/config:[remote "origin"]Url user: ${gitconfig_user}"
-        echo ".git/config:[remote "origin"]Url repo: ${gitconfig_repo}"
-        local cd_name=$(basename "${repo_path}")
+        # .git/config [remote "origin"] url キーからユーザ名とリモート・リポジトリ名を取得する（他ユーザのリポジトリにpushしているとそのユーザになってしまう！）
+#        local gitconfig_userrepo=($(python3 "$HOME/root/script/py/tool/git/config/Reader.py" "${repo_path}"))
+#        local gitconfig_user=${gitconfig_userrepo[0]}
+#        local gitconfig_repo=${gitconfig_userrepo[1]}
+
+        # .git/config からユーザ名とリモート・リポジトリ名を取得する（git clone したものだと取得できない！）
+#        local gitconfig_user=`git config --get user.name`
+#        local gitconfig_repo=$(basename -s .git $(git config --get remote.origin.url))
+
+        # .git/config [remote "origin"] url キーからユーザ名とリモート・リポジトリ名を取得する（他ユーザのリポジトリにpushしているとそのユーザになってしまう！）
+        local gitconfig_remote_url=`git config --get remote.origin.url`
+        local gitconfig_repo=`basename -s .git "${gitconfig_remote_url}"`
+        local gitconfig_user=$(basename $(dirname "${gitconfig_remote_url}"))
+
+          # 起動引数と.git/configが一致するか
         [ 0 -lt $# ] && [ "$1" != "$gitconfig_user" ] && { echo -e ".git/configのユーザ名と起動引数のユーザ名が一致しません。\n  .git/configのユーザ名: ${gitconfig_user}\n  起動引数のユーザ名: ${1}"; exit 1; }
-        [ "${cd_name}" != "${gitconfig_repo}" ] && { echo -e ".git/configのリポジトリ名とカレントディレクトリ名が一致しません。他所からコピペした.gitを間違って使い回していませんか？\n  .git/configリポジトリ名: ${gitconfig_repo}\n  カレントディレクトリ名 : ${cd_name}"; exit 1; }
-        username=$gitconfig_user
+        [ "${reponame}" != "${gitconfig_repo}" ] && { echo -e ".git/configのリポジトリ名とカレントディレクトリ名が一致しません。他所からコピペした.gitを間違って使い回していませんか？\n  .git/configリポジトリ名: ${gitconfig_repo}\n  カレントディレクトリ名 : ${reponame}"; exit 1; }
+
+        username=${gitconfig_user}
     fi
 }
-
 ExistReadMe () {
     for name in README ReadMe readme Readme; do
         for ext in "" .md .txt; do
@@ -30,8 +41,7 @@ QuerySqlite () {
     local sql=$1
     [ $# -lt 2 ] && local db_file=~/root/script/py/GitHub.Uploader.Pi3.Https.201802210700/res/db/GitHub.Accounts.sqlite3
     [ 2 -le $# ] && local db_file=$2
-    local this_dir=`dirname $repo_path`
-    local sql_file=${this_dir}/tmp.sql
+    local sql_file=/tmp/tmp.sql
     echo $sql > $sql_file
     local select=`sqlite3 $db_file < $sql_file`
     rm $sql_file
@@ -62,24 +72,47 @@ GetPassMail () {
     mailaddr=${pass_mail[1]}
     [ -z "$password" ] && { echo "パスワードが見つかりませんでした。DBを確認してください。"; exit 1; }
     [ -z "$mailaddr" ] && { echo "メールアドレスが見つかりませんでした。DBを確認してください。"; exit 1; }
-}
-OverwriteConfig () {
-    local before="	url = https://github.com/"
-    local after="	url = https://${username}:${password}@github.com/"
-    local config=".git/config"
-    cp "$config" "$config.BAK"
-    sed -e "s%$before%$after%" "$config.BAK" > "$config"
-    rm "$config.BAK"
+    github_remote_origin_url="https://${username}:${password}@github.com/${username}/${reponame}"
 }
 CreateRepository () {
     if [ ! -d ".git" ]; then
-        echo "リポジトリを作成します。"
-        git init
-        #json='{"name":"'${REPO_NAME}'","description":"'${REPO_DESC}'","homepage":"'${REPO_HOME}'"}'it
-        json='{"name":"'${repo_name}'"}'
-        echo $json | curl -u "${username}:${password}" https://api.github.com/user/repos -d @-
-        git remote add origin https://${username}:${password}@github.com/${username}/${repo_name}.git
+        CreateLocalRepository
+        CreateRemoteRepository
+    else
+        SetGitUser
     fi
+}
+CreateLocalRepository () {
+    echo "ローカル・リポジトリを作成します。"
+    git init
+    SetGitUser
+}
+SetGitUser () {
+    # リポジトリごとにユーザ名とメアドを設定する
+    git config --global user.useConfigOnly true
+    git config --global --unset user.name
+    git config --global --unset user.email
+    git config user.name "$username"
+    git config user.email "$mailaddr"
+    if [ -z "`git config --local user.name`" ]; then
+        echo "git user.name がセットされていません。終了します。"
+　　　　　rm -rf "${repo_path}/.git"
+        exit 1
+    fi
+    if [ -z "`git config --local user.email`" ]; then
+        echo "git user.email がセットされていません。終了します。"
+　　　　　rm -rf "${repo_path}/.git"
+        exit 1
+    fi
+}
+CreateRemoteRepository () {
+    echo "リモート・リポジトリを作成します。"
+    #json='{"name":"'${REPO_NAME}'","description":"'${REPO_DESC}'","homepage":"'${REPO_HOME}'"}'it
+    json='{"name":"'${reponame}'"}'
+    echo $json | curl -u "${username}:${password}" https://api.github.com/user/repos -d @-
+    #git remote add origin https://${username}:${password}@github.com/${username}/${reponame}.git
+    git remote add origin "${github_remote_origin_url}.git"
+
 }
 CheckView () {
     git status -s
@@ -93,34 +126,32 @@ AddCommitPush () {
     if [ -n "$answer" ]; then
         git add .
         git commit -m "$answer"
-        OverwriteConfig
+        # セキュリティ的に危険 https://qiita.com/azusanakano/items/8dc1d7e384b00239d4d9
+        git config remote.origin.url "${github_remote_origin_url}"
         # stderrにパスワード付URLが見えてしまうので隠す
         git push origin master 2>&1 | grep -v http
     fi
 }
 
-# $1 Githubユーザ名
 repo_path=`pwd`
 IsSameConfig "$@"
 ExistReadMe
 [ 0 -eq $# ] && SelectUser
 [ 0 -lt $# ] && IsRegistedUser $1
 
-# パスワード取得と設定
 GetPassMail
-git config --local user.name $username
-git config --local user.email "$mailaddr"
-# 2018/08/11 複数アカウント使っていると違うアカウントでcommitされることがあった。~/.gitconfigの値が使われていた。どうすればいいか不明。とりあえず初回時にコミットせず一旦終了し、再度実行してコミットすると正しいアカウントでコミットできる。
-echo "username:${username}"
-echo "email:${mailaddr}"
-
-# Create, Add, Commit, Push
-repo_name=$(basename $repo_path)
-echo "$username/$repo_name"
 CreateRepository
+
+echo "$username/$reponame"
+#echo "username: "`git config --get user.name`
+#echo "email: "`git config --get user.email`
+
+# Add, Commit, Push
 CheckView
 AddCommitPush
 
 unset username
+unset reponame
 unset password
 unset mailaddr
+unset github_remote_origin_url

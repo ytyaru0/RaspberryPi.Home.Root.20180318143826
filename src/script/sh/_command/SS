@@ -21,7 +21,21 @@ function SS ()  {
         local filename=$timestamp"_"$qual3$ext
         local o_file=`Join ${Path[SS]} "$filename"`
         local i_file=`Join ${Path[SS]} "$timestamp$ext"`
-        pngquant --strip --output "$o_file" --quality $q "$i_file"
+        # エラー時は終了する（元画像を削除しない）
+        # https://qiita.com/sh19910711/items/db382a9da77e8ebbf041
+        pngquant --strip --output "$o_file" --quality $q "$i_file" || exit 1;
+        # pngquant --strip --output "$o_file" --quality $q "$i_file"
+        # pngquantは稀に以下のエラーになり縮小ファイルの作成に失敗する。古いlibpngを使っているのが原因。
+        # error: cannot open 20181128101730_100.png for reading
+        # https://github.com/kornelski/pngquant/issues/296
+        # https://github.com/kornelski/pngquant/issues/200
+        # $ pngquant -h
+        # pngquant, 2.11.7 (January 2018), by Kornel Lesinski, Greg Roelofs.
+        #    Compiled with no support for color profiles. Using libpng 1.2.54.
+        # 後続のコマンドに支障をきたし以下エラーが出る原因となる。
+        # stat: '/tmp/work/SS/20181128103204_100.png' を stat できません: そのようなファイルやディレクトリはありません
+        # IndexError: list index out of range
+        # python3: can't open file '/tmp/work/_command/Size.py': [Errno 2] No such file or directory
 
         local size=`GetSize $o_file`
         local rate=`python3 ~/root/script/py/os/file/Rate.py  $size_source $size`

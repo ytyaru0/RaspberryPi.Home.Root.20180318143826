@@ -6,6 +6,7 @@ ExportPath "$HOME/root/tool" "$HOME/root/script/sh/_command"
 . ~/root/script/sh/pyenv.sh
 . ~/root/script/sh/py_venv.sh
 . ~/root/script/sh/node_module.sh
+. ~/root/script/sh/dotnet.sh
 
 # 渡されたパスのうち最初に存在したファイルをsourceコマンドで実行する
 any_source () { for s in "$@"; do [ -f "$s" ] && { . "$s"; return; }; done }

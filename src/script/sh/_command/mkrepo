@@ -1,0 +1,51 @@
+#!/bin/bash
+# ----------------------------------------------------------------------------
+# リポジトリ作成
+#   リポジトリのテンプレートをコピーする。
+#   出力: /tmp/work/repos/repo.yyyyMMddHHmmss/
+# 作成日: 2019-02-16
+# ----------------------------------------------------------------------------
+# テンプレートがあるディレクトリパスを標準出力する
+TplDir() {
+    echo "${HOME}/root/db/template/_command/mkrepo/"
+}
+# 出力先ディレクトリパスを標準出力する
+OutDir() {
+    echo /tmp/work/repos/
+}
+# 指定ディレクトリ直下のディレクトリ一覧を標準出力する
+DirList() {
+    echo $(cd "${1}"; ls -l | grep ^d | awk '{print $9}')
+}
+# 出力先（カレントディレクトリ）にテンプレートと同名のディレクトリが存在した場合はテンプレートをリネームする
+#Rename() {
+#    [ -f "./${1}" ] && { local name="${1}_"`date +%Y%m%d%H%M%S`; mv "./${1}" "./${name}"; echo "${name}"; } || echo "${1}";
+#}
+SelectTemplate() {
+    local template=default
+#    local dirs=`cd /home/pi/root/_meta/res/mkrepo/templates/; ls -l | grep ^d | awk '{print $9}'`
+#    local dirs=$(cd $(TplDir); ls -l | grep ^d | awk '{print $9}')
+    local dirs=$(DirList $(TplDir))
+    select i in ${dirs}; do [ -n "$i" ] && { template=$i; break; }; done
+    echo "${template}"
+}
+# テンプレートをコピー＆リネームする
+# 出力: /tmp/work/repos/repo.yyyyMMddHHmmss/
+MakeDir() {
+#    local tpl_name=`Rename "${1}"`
+#    local template=`TplDir`"${tpl_name}"
+#    local template="/home/pi/root/_meta/res/mkrepo/templates/${tpl_name}"
+#    cp -r "${template}" "./"
+#    mv "./${tpl_name}" "repo.`date +%Y%m%d%H%M%S`"
+    local tpl_name="${1}"
+    local template=`TplDir`"${tpl_name}"
+    mkdir -p "`OutDir`"
+    cp -r "${template}" "`OutDir`"
+    mv "`OutDir`${tpl_name}" "`OutDir`repo.`date +%Y%m%d%H%M%S`"
+}
+Run() {
+    local tpl_name=`SelectTemplate`
+    MakeDir "${tpl_name}"
+}
+Run
+

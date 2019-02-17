@@ -101,7 +101,8 @@ Run() {
     local Hour=`Hour`
     local Minute=`Minute`
     local Second=`Second`
-    echo "${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}"
+#    echo "${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}"
+    mkdir -p "`OutDir`"
     CreateFile ${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}
     WriteText ${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}
     StartupEditor ${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}

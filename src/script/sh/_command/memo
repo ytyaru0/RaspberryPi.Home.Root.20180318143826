@@ -1,0 +1,109 @@
+#!/bin/bash
+# ----------------------------------------------------------------------------
+# メモファイル作成
+#   リポジトリのテンプレートをコピーする。
+#   出力: /tmp/work/memo/yyyyMMddHHmmss.md
+# 作成日: 2019-02-17
+# ----------------------------------------------------------------------------
+# テンプレートがあるディレクトリパスを標準出力する
+TplDir() {
+    echo "${HOME}/root/db/template/_command/mkrepo/"
+}
+# 出力先ディレクトリパスを標準出力する
+OutDir() {
+    echo /tmp/work/memo/
+}
+Timestamp() {
+    echo "`date +%Y%m%d%H%M%S`"
+}
+# 日付を出力する(yyyy-MM-dd)
+# $1: delimiter ('-' or '/')
+Date() {
+    local delimiter=${1:--}
+    echo "`date +%Y${delimiter}%m${delimiter}%d`"
+}
+# 日付を出力する(yyyy-MM-dd)
+# $1: delimiter ('-' or '/')
+Time() {
+    local delimiter=${1:-:}
+    echo "`date +%H${delimiter}%M${delimiter}%S`"
+}
+# 日付を出力する(yyyy-MM-dd)
+# $1: delimiter ('-' or '/')
+Datetime() {
+    local delimiter=${1:--}
+    echo "$(Date $1) $(Time)"
+}
+Year() {
+    echo "`date +%Y`"
+}
+Month() {
+    echo "`date +%m`"
+}
+Day() {
+    echo "`date +%d`"
+}
+Hour() {
+    echo "`date +%H`"
+}
+Minute() {
+    echo "`date +%M`"
+}
+Second() {
+    echo "`date +%S`"
+}
+Timezone() {
+    echo "`date +%z`"
+}
+# メモファイル名
+# $1〜$6: Year, Month, Day, Hour, Minute, Second
+Filename() {
+#    local filename="$1$2$3$4$5$6.md"
+#    echo ${filename}
+    echo "$1$2$3$4$5$6.md"
+}
+# メモファイル作成
+# $1〜$6: Year, Month, Day, Hour, Minute, Second
+CreateFile() {
+#    local filename="$1$2$3$4$5$6.md"
+#    touch "`OutDir`${filename}"
+    touch "$(OutDir)$(Filename $1 $2 $3 $4 $5 $6)"
+}
+# メモのテンプレートを追記
+# $1〜$6: Year, Month, Day, Hour, Minute, Second
+WriteText() {
+    local datetime="$1-$2-$3 $4:$5:$6 `Timezone`"
+    str=$(cat <<EOS
+---
+layout: post
+title: 
+date: ${datetime}
+categories: [memo, note]
+tags: [memo, note]
+---
+
+# 
+
+EOS
+)
+    echo "$str" >> "$(OutDir)$(Filename $1 $2 $3 $4 $5 $6)"
+#author: ytyaru
+#github: https://github.com/ytyaru/
+#hatena: http://ytyaru.hatenablog.com/
+}
+StartupEditor() {
+    pluma "$(OutDir)$(Filename $1 $2 $3 $4 $5 $6)"
+}
+Run() {
+    local Year=`Year`
+    local Month=`Month`
+    local Day=`Day`
+    local Hour=`Hour`
+    local Minute=`Minute`
+    local Second=`Second`
+    echo "${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}"
+    CreateFile ${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}
+    WriteText ${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}
+    StartupEditor ${Year} ${Month} ${Day} ${Hour} ${Minute} ${Second}
+}
+Run

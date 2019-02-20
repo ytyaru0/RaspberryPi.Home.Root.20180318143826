@@ -1,26 +1,28 @@
 #!/bin/bash
 # ----------------------------------------------------------------------------
 # 辞書検索
-#   $1: 辞書の種類（ej: 英和, je: 和英）
-#   $2: 検索キーワード
-# 作成日: 2019-02-17
+#   $1: 検索キーワード（キーワードが英字なら英和、それ以外なら和英）
+# 使用例:
+#   dict 終わり    和英
+#   dict end       英和
+#   dict ^end$     完全一致（^検索キーワード$）
+#   dict ^end      前方一致（^検索キーワード）
+#   dict end$      後方一致（検索キーワード$）
+# 更新日:
+#   2019-02-18 引数最小化
+#   2019-02-17 新規作成
 # ----------------------------------------------------------------------------
-DictFile() {
-    echo "${HOME}/root/db/dictionary/GENE95/gene.LF.utf8.txt"
-}
-EnJa() {
-    grep "${1}" "`DictFile`" -E -A 1 -wi --color=always | less -R -FX
-}
-JaEn() {
-    grep "${1}" "`DictFile`" -E -B 1 -wi --color=always | less -R -FX
-
-}
-Run() {
-    case "${1}" in
-        "ej" ) EnJa "${2}" ;;
-        "je" ) JaEn "${2}" ;;
-        * ) echo "第一引数は 'ej' 'je' のいずれかにしてください。それぞれ英和、和英です。" ;;
-    esac
-}
-Run "${1}" "${2}"
+DictFile() { echo "${HOME}/root/db/dictionary/GENE95/gene.LF.utf8.txt"; }
+EnJa() { grep "${1}" "`DictFile`" -E -A 1 -wi --color=always | less -R -FX; }
+JaEn() { grep "${1}" "`DictFile`" -E -B 1 -wi --color=always | less -R -FX; }
+Run() { [[ "${1}" =~ ^[a-zA-Z_0-9\ -~]+$ ]] && EnJa "${1}" || JaEn "${1}"; }
+#Run() { [[ "${1}" =~ ^[\u3041-\u3096\u30A1-\u30FA々〇〻\u3400-\u9FFF\uF900-\uFAFF\uD840-\uD87F\uDC00-\uDFFF]+$ ]] && EnJa "${1}" || JaEn "${1}"; }
+#Run() {
+# https://so-zou.jp/software/tech/programming/tech/regular-expression/meta-character/variable-width-encoding.htm
+#    HIRAGANA=\u3041-\u3096\
+#    KATAKANA=u30A1-\u30FA
+#    KANJI=々〇〻\u3400-\u9FFF\uF900-\uFAFF\uD840-\uD87F\uDC00-\uDFFF
+#    [[ "${1}" =~ ^[${HIRAGANA}${KATAKANA}${KANJI}]+$ ]] && JaEn "${1}" || EnJa "${1}"
+#}
+Run "${1}"
 
